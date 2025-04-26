@@ -1,3 +1,6 @@
+[ [Engligh](README.md) | [日本語](README.ja.md) ]
+
+---
 
 # Pletter unpacker for z88dk
 
@@ -14,6 +17,7 @@ Copyright (C) 2025 aburi6800
 
 Apply the patch to the original unpack.asm.  
 
+Example:
 ```shell
 patch unpack.asm unpack.patch
 ```
