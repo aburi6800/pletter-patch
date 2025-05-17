@@ -1,15 +1,16 @@
-diff --git a/./org/unpack.asm b/./unpack.asm
-index 7b267e8..5c17d5f 100644
---- a/./org/unpack.asm
-+++ b/./unpack.asm
-@@ -1,4 +1,6 @@
+--- org/unpack.asm	2008-02-26 17:50:00.000000000 +0900
++++ unpack.asm	2025-05-17 23:32:35.330271265 +0900
+@@ -1,25 +1,42 @@
  ; pletter v0.5c msx unpacker
 +; Original source : Copyright (c) 2002-2003 Team Bomba
 +; z88dk patch     : Copyright (C) 2025 aburi6800 (Hitoshi Iwai)
  
  ; call unpack with hl pointing to some pletter5 data, and de pointing to the destination.
  ; changes all registers
-@@ -7,19 +9,32 @@
+ 
++SECTION code_user
++
+ ; define lengthindata when the original size is written in the pletter data
  
  ;  define LENGTHINDATA
  
@@ -48,7 +49,7 @@ index 7b267e8..5c17d5f 100644
  
    ifdef LENGTHINDATA
    inc hl
-@@ -48,29 +63,29 @@
+@@ -48,29 +65,29 @@
    ld e,1
    exx
    ld iy,loop
@@ -86,7 +87,7 @@ index 7b267e8..5c17d5f 100644
    inc hl
    exx
    ld c,(hl)
-@@ -78,21 +93,21 @@ getlen
+@@ -78,21 +95,21 @@
    ld b,0
    bit 7,c
    jp z,offsok
@@ -114,7 +115,7 @@ index 7b267e8..5c17d5f 100644
    GETBIT
    rl b
    GETBIT
-@@ -100,7 +115,7 @@ mode2
+@@ -100,7 +117,7 @@
    or a
    inc b
    res 7,c
@@ -123,7 +124,7 @@ index 7b267e8..5c17d5f 100644
    inc bc
    push hl
    exx
-@@ -112,15 +127,15 @@ offsok
+@@ -112,15 +129,15 @@
    pop bc
    ldir
    pop hl
@@ -142,7 +143,7 @@ index 7b267e8..5c17d5f 100644
    exx
    ld a,(hl)
    inc hl
-@@ -128,14 +143,14 @@ getbitexx
+@@ -128,14 +145,14 @@
    rla
    ret
  
@@ -164,5 +165,6 @@ index 7b267e8..5c17d5f 100644
 -  endmodule
 +;  endmodule
  
- ;eof
-\ No newline at end of file
+-;eof
+\ ファイル末尾に改行がありません
++;eof
