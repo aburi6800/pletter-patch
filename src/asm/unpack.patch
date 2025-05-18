@@ -1,152 +1,136 @@
 --- org/unpack.asm	2008-02-26 17:50:00.000000000 +0900
-+++ unpack.asm	2025-05-17 23:32:35.330271265 +0900
-@@ -1,25 +1,42 @@
- ; pletter v0.5c msx unpacker
-+; Original source : Copyright (c) 2002-2003 Team Bomba
-+; z88dk patch     : Copyright (C) 2025 aburi6800 (Hitoshi Iwai)
- 
- ; call unpack with hl pointing to some pletter5 data, and de pointing to the destination.
- ; changes all registers
- 
-+SECTION code_user
-+
- ; define lengthindata when the original size is written in the pletter data
- 
- ;  define LENGTHINDATA
- 
++++ unpack.asm	2025-05-18 12:56:43.442619000 +0900
+@@ -1,141 +1,165 @@
+-; pletter v0.5c msx unpacker
+-
+-; call unpack with hl pointing to some pletter5 data, and de pointing to the destination.
+-; changes all registers
+-
+-; define lengthindata when the original size is written in the pletter data
+-
+-;  define LENGTHINDATA
+-
 -  module pletter
-+;  module pletter
-+PUBLIC _unpack
- 
+-
 -  macro GETBIT
-+;  macro GETBIT
-+MACRO GETBIT
-   add a,a
-   call z,getbit
+-  add a,a
+-  call z,getbit
 -  endmacro
-+;  endmacro
-+ENDM
- 
+-
 -  macro GETBITEXX
-+;  macro GETBITEXX
-+MACRO GETBITEXX
-   add a,a
-   call z,getbitexx
+-  add a,a
+-  call z,getbitexx
 -  endmacro
-+;  endmacro
-+ENDM
-+
-+_unpack:
-+
-+  ; Get call parameters from z88dk C.
-+  ; Not necessary when calling from asm.
-+  pop bc
-+  pop de
-+  pop hl
-+  push bc
- 
+-
 -@unpack
- 
-   ifdef LENGTHINDATA
-   inc hl
-@@ -48,29 +65,29 @@
-   ld e,1
-   exx
-   ld iy,loop
+-
+-  ifdef LENGTHINDATA
+-  inc hl
+-  inc hl
+-  endif
+-
+-  ld a,(hl)
+-  inc hl
+-  exx
+-  ld de,0
+-  add a,a
+-  inc a
+-  rl e
+-  add a,a
+-  rl e
+-  add a,a
+-  rl e
+-  rl e
+-  ld hl,modes
+-  add hl,de
+-  ld e,(hl)
+-  ld ixl,e
+-  inc hl
+-  ld e,(hl)
+-  ld ixh,e
+-  ld e,1
+-  exx
+-  ld iy,loop
 -literal
-+literal:
-   ldi
+-  ldi
 -loop
-+loop:
-   GETBIT
-   jr nc,literal
-   exx
-   ld h,d
-   ld l,e
+-  GETBIT
+-  jr nc,literal
+-  exx
+-  ld h,d
+-  ld l,e
 -getlen
-+getlen:
-   GETBITEXX
+-  GETBITEXX
 -  jr nc,.lenok
 -.lus
-+  jr nc,lenok
-+lus:
-   GETBITEXX
-   adc hl,hl
-   ret c
-   GETBITEXX
+-  GETBITEXX
+-  adc hl,hl
+-  ret c
+-  GETBITEXX
 -  jr nc,.lenok
-+  jr nc,lenok
-   GETBITEXX
-   adc hl,hl
-   ret c
-   GETBITEXX
+-  GETBITEXX
+-  adc hl,hl
+-  ret c
+-  GETBITEXX
 -  jp c,.lus
 -.lenok
-+  jp c,lus
-+lenok:
-   inc hl
-   exx
-   ld c,(hl)
-@@ -78,21 +95,21 @@
-   ld b,0
-   bit 7,c
-   jp z,offsok
+-  inc hl
+-  exx
+-  ld c,(hl)
+-  inc hl
+-  ld b,0
+-  bit 7,c
+-  jp z,offsok
 -  jp ix
-+  jp (ix)
- 
+-
 -mode6
-+mode6:
-   GETBIT
-   rl b
+-  GETBIT
+-  rl b
 -mode5
-+mode5:
-   GETBIT
-   rl b
+-  GETBIT
+-  rl b
 -mode4
-+mode4:
-   GETBIT
-   rl b
+-  GETBIT
+-  rl b
 -mode3
-+mode3:
-   GETBIT
-   rl b
+-  GETBIT
+-  rl b
 -mode2
-+mode2:
-   GETBIT
-   rl b
-   GETBIT
-@@ -100,7 +117,7 @@
-   or a
-   inc b
-   res 7,c
+-  GETBIT
+-  rl b
+-  GETBIT
+-  jr nc,offsok
+-  or a
+-  inc b
+-  res 7,c
 -offsok
-+offsok:
-   inc bc
-   push hl
-   exx
-@@ -112,15 +129,15 @@
-   pop bc
-   ldir
-   pop hl
+-  inc bc
+-  push hl
+-  exx
+-  push hl
+-  exx
+-  ld l,e
+-  ld h,d
+-  sbc hl,bc
+-  pop bc
+-  ldir
+-  pop hl
 -  jp iy
-+  jp (iy)
- 
+-
 -getbit
-+getbit:
-   ld a,(hl)
-   inc hl
-   rla
-   ret
- 
+-  ld a,(hl)
+-  inc hl
+-  rla
+-  ret
+-
 -getbitexx
-+getbitexx:
-   exx
-   ld a,(hl)
-   inc hl
-@@ -128,14 +145,14 @@
-   rla
-   ret
- 
+-  exx
+-  ld a,(hl)
+-  inc hl
+-  exx
+-  rla
+-  ret
+-
 -modes
 -  word offsok
 -  word mode2
@@ -154,6 +138,163 @@
 -  word mode4
 -  word mode5
 -  word mode6
+-
+-  endmodule
+-
++; pletter v0.5c msx unpacker
++; Original source : Copyright (c) 2002-2003 Team Bomba
++; z88dk patch     : Copyright (c) 2025 aburi6800 (Hitoshi Iwai)
++
++; call unpack with hl pointing to some pletter5 data, and de pointing to the destination.
++; changes all registers
++
++; define lengthindata when the original size is written in the pletter data
++
++;  define LENGTHINDATA
++
++;  module pletter
++
++SECTION code_user
++PUBLIC _unpack
++
++;  macro GETBIT
++MACRO GETBIT
++  add a,a
++  call z,getbit
++;  endmacro
++ENDM
++
++;  macro GETBITEXX
++MACRO GETBITEXX
++  add a,a
++  call z,getbitexx
++;  endmacro
++ENDM
++
++_unpack:
++
++  ; Get call parameters from z88dk C.
++  ; Not necessary when calling from asm.
++  ld hl, 2
++  add hl, sp
++  ld e,(hl)
++  inc hl
++  ld d,(hl)
++  inc hl
++  ld c,(hl)
++  inc hl
++  ld b,(hl)
++  push bc
++  pop hl
++
++
++  ifdef LENGTHINDATA
++  inc hl
++  inc hl
++  endif
++
++  ld a,(hl)
++  inc hl
++  exx
++  ld de,0
++  add a,a
++  inc a
++  rl e
++  add a,a
++  rl e
++  add a,a
++  rl e
++  rl e
++  ld hl,modes
++  add hl,de
++  ld e,(hl)
++  ld ixl,e
++  inc hl
++  ld e,(hl)
++  ld ixh,e
++  ld e,1
++  exx
++  ld iy,loop
++literal:
++  ldi
++loop:
++  GETBIT
++  jr nc,literal
++  exx
++  ld h,d
++  ld l,e
++getlen:
++  GETBITEXX
++  jr nc,lenok
++lus:
++  GETBITEXX
++  adc hl,hl
++  ret c
++  GETBITEXX
++  jr nc,lenok
++  GETBITEXX
++  adc hl,hl
++  ret c
++  GETBITEXX
++  jp c,lus
++lenok:
++  inc hl
++  exx
++  ld c,(hl)
++  inc hl
++  ld b,0
++  bit 7,c
++  jp z,offsok
++  jp (ix)
++
++mode6:
++  GETBIT
++  rl b
++mode5:
++  GETBIT
++  rl b
++mode4:
++  GETBIT
++  rl b
++mode3:
++  GETBIT
++  rl b
++mode2:
++  GETBIT
++  rl b
++  GETBIT
++  jr nc,offsok
++  or a
++  inc b
++  res 7,c
++offsok:
++  inc bc
++  push hl
++  exx
++  push hl
++  exx
++  ld l,e
++  ld h,d
++  sbc hl,bc
++  pop bc
++  ldir
++  pop hl
++  jp (iy)
++
++getbit:
++  ld a,(hl)
++  inc hl
++  rla
++  ret
++
++getbitexx:
++  exx
++  ld a,(hl)
++  inc hl
++  exx
++  rla
++  ret
++
 +modes:
 +  defw offsok
 +  defw mode2
@@ -161,10 +302,8 @@
 +  defw mode4
 +  defw mode5
 +  defw mode6
- 
--  endmodule
++
 +;  endmodule
- 
--;eof
++
+ ;eof
 \ ファイル末尾に改行がありません
-+;eof

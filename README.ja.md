@@ -9,7 +9,7 @@ https://github.com/nanochess/Pletter/tree/master
 Copyright (c) 2002-2003 Team Bomba  
 
 z88dk用パッチ:  
-Copyright (C) 2025 aburi6800  
+Copyright (c) 2025 aburi6800  
 
 <br>
 
